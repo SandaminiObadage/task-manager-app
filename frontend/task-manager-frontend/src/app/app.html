@@ -1,0 +1,27 @@
+<div class="app-shell">
+  <header class="top-bar">
+    <div class="brand-block">
+      <p class="brand-eyebrow">Full Stack Assignment</p>
+      <h1>{{ appName }}</h1>
+    </div>
+
+    <nav class="main-nav" aria-label="Primary navigation" *ngIf="isAuthenticated">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Tasks</a>
+      <a routerLink="/add" routerLinkActive="active">New Task</a>
+    </nav>
+
+    <nav class="main-nav" aria-label="Authentication navigation" *ngIf="!isAuthenticated">
+      <a routerLink="/login" routerLinkActive="active">Login</a>
+      <a routerLink="/register" routerLinkActive="active">Register</a>
+    </nav>
+
+    <div class="user-chip" *ngIf="isAuthenticated">
+      <span>{{ currentUsername }}</span>
+      <button type="button" (click)="logout()">Logout</button>
+    </div>
+  </header>
+
+  <main class="content-panel">
+    <router-outlet />
+  </main>
+</div>

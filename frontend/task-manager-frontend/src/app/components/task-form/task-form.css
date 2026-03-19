@@ -1,0 +1,109 @@
+.task-form-page {
+  max-width: 760px;
+  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid rgba(30, 30, 30, 0.08);
+  border-radius: 20px;
+  padding: clamp(1rem, 3vw, 1.5rem);
+  backdrop-filter: blur(6px);
+}
+
+header {
+  margin-bottom: 0.9rem;
+}
+
+.kicker {
+  margin: 0;
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: #6d6b78;
+}
+
+h2 {
+  margin: 0.2rem 0;
+  font-family: "Space Grotesk", "Segoe UI", sans-serif;
+}
+
+.subtitle {
+  margin: 0;
+  color: #5d586a;
+}
+
+form {
+  display: grid;
+  gap: 0.8rem;
+}
+
+label {
+  display: grid;
+  gap: 0.38rem;
+  font-weight: 600;
+  color: #312c3e;
+}
+
+input,
+textarea,
+select {
+  border: 1px solid #d9d3e2;
+  border-radius: 11px;
+  padding: 0.62rem 0.7rem;
+  background: #fff;
+}
+
+textarea {
+  resize: vertical;
+}
+
+.error {
+  color: #b52b2b;
+  min-height: 1em;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.3rem;
+}
+
+.actions a,
+.actions button {
+  border: 1px solid #dbcfe8;
+  background: #fff;
+  color: #2f2a3a;
+  border-radius: 10px;
+  text-decoration: none;
+  padding: 0.5rem 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.actions button {
+  background: #ff6f61;
+  border-color: #ff6f61;
+  color: white;
+}
+
+.actions button[disabled] {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.state-msg {
+  margin: 0.5rem 0;
+}
+
+.state-msg.error {
+  color: #b52b2b;
+}
+
+.retry-btn {
+  border: 1px solid #dbcfe8;
+  background: #fff;
+  color: #2f2a3a;
+  border-radius: 10px;
+  padding: 0.45rem 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-bottom: 0.6rem;
+}

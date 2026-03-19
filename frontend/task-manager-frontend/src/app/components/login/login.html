@@ -1,0 +1,29 @@
+<section class="auth-page">
+  <header>
+    <p class="kicker">Welcome Back</p>
+    <h2>Sign In</h2>
+    <p class="subtitle">Log in to manage your tasks securely with JWT authentication.</p>
+  </header>
+
+  <p class="state-msg error" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <label>
+      Username
+      <input type="text" formControlName="username" placeholder="Enter username" />
+      <small class="error" *ngIf="controlError('username')">{{ controlError('username') }}</small>
+    </label>
+
+    <label>
+      Password
+      <input type="password" formControlName="password" placeholder="Enter password" />
+      <small class="error" *ngIf="controlError('password')">{{ controlError('password') }}</small>
+    </label>
+
+    <button type="submit" [disabled]="submitting">
+      {{ submitting ? 'Signing in...' : 'Sign In' }}
+    </button>
+  </form>
+
+  <p class="switch-link">No account yet? <a routerLink="/register">Create one</a></p>
+</section>

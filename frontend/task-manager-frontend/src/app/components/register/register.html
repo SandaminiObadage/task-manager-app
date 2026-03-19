@@ -1,0 +1,29 @@
+<section class="auth-page">
+  <header>
+    <p class="kicker">Create Account</p>
+    <h2>Sign Up</h2>
+    <p class="subtitle">Register to access your task dashboard with secured API calls.</p>
+  </header>
+
+  <p class="state-msg error" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <label>
+      Username
+      <input type="text" formControlName="username" placeholder="Choose username" />
+      <small class="error" *ngIf="controlError('username')">{{ controlError('username') }}</small>
+    </label>
+
+    <label>
+      Password
+      <input type="password" formControlName="password" placeholder="Choose password" />
+      <small class="error" *ngIf="controlError('password')">{{ controlError('password') }}</small>
+    </label>
+
+    <button type="submit" [disabled]="submitting">
+      {{ submitting ? 'Creating account...' : 'Create Account' }}
+    </button>
+  </form>
+
+  <p class="switch-link">Already have an account? <a routerLink="/login">Sign in</a></p>
+</section>

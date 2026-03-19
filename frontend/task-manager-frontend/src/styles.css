@@ -1,0 +1,23 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap");
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "DM Sans", "Segoe UI", sans-serif;
+  color: #1f1f24;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(255, 179, 102, 0.45), transparent 40%),
+    radial-gradient(circle at 85% 10%, rgba(255, 111, 97, 0.25), transparent 35%),
+    linear-gradient(140deg, #fff5ec 0%, #f5f7ff 45%, #eef7ff 100%);
+  min-height: 100vh;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}

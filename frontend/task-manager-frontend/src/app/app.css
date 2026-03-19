@@ -1,0 +1,107 @@
+:host {
+  display: block;
+}
+
+.app-shell {
+  min-height: 100vh;
+  padding: 2rem clamp(1rem, 3vw, 2.5rem);
+}
+
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin: 0 auto 1.25rem;
+  max-width: 1100px;
+}
+
+.brand-block h1 {
+  margin: 0;
+  font-family: "Space Grotesk", "Segoe UI", sans-serif;
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  letter-spacing: 0.02em;
+}
+
+.brand-eyebrow {
+  margin: 0;
+  text-transform: uppercase;
+  font-size: 0.74rem;
+  letter-spacing: 0.15em;
+  color: #706f7b;
+}
+
+.main-nav {
+  display: flex;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 0.3rem;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(4px);
+}
+
+.main-nav a {
+  text-decoration: none;
+  color: #2f2a39;
+  font-weight: 600;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  transition: all 0.2s ease;
+}
+
+.main-nav a:hover {
+  background: rgba(255, 111, 97, 0.12);
+}
+
+.main-nav a.active {
+  background: #ff6f61;
+  color: #fff;
+}
+
+.user-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-weight: 600;
+  color: #2f2a39;
+}
+
+.user-chip button {
+  border: 1px solid #ffd5cf;
+  background: #fff4f2;
+  color: #9a2f22;
+  border-radius: 999px;
+  padding: 0.38rem 0.7rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.content-panel {
+  max-width: 1100px;
+  margin: 0 auto;
+  animation: rise-in 300ms ease-out;
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 700px) {
+  .top-bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .user-chip {
+    align-self: stretch;
+    justify-content: space-between;
+  }
+}

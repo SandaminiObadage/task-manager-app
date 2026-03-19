@@ -1,0 +1,58 @@
+<section class="task-list-page">
+  <header class="page-head">
+    <div>
+      <p class="kicker">Workspace</p>
+      <h2>Track your priorities</h2>
+      <p class="subtitle">Create, edit, filter and complete tasks with a clean workflow.</p>
+    </div>
+    <a class="create-btn" routerLink="/add">+ Add Task</a>
+  </header>
+
+  <div class="toolbar">
+    <label>
+      Status
+      <select [(ngModel)]="selectedStatus" (change)="onFilterChange()">
+        <option value="">All</option>
+        <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
+      </select>
+    </label>
+
+    <label>
+      Search
+      <input
+        type="text"
+        placeholder="Search title or description"
+        [(ngModel)]="searchTerm"
+      />
+    </label>
+  </div>
+
+  <p class="state-msg" *ngIf="loading">Loading tasks...</p>
+  <p class="state-msg error" *ngIf="errorMessage">{{ errorMessage }}</p>
+  <button class="retry-btn" type="button" *ngIf="errorMessage && !loading" (click)="loadTasks()">
+    Retry
+  </button>
+
+  <div class="card-grid" *ngIf="!loading && !errorMessage && visibleTasks.length > 0">
+    <article class="task-card" *ngFor="let task of visibleTasks; trackBy: trackByTaskId">
+      <header>
+        <h3>{{ task.title }}</h3>
+        <span class="status" [class]="'status ' + task.status.toLowerCase()">{{ task.status }}</span>
+      </header>
+
+      <p class="description">{{ task.description || 'No description provided.' }}</p>
+
+      <footer>
+        <small>Created: {{ task.createdAt ? (task.createdAt | date: 'medium') : '-' }}</small>
+        <div class="actions">
+          <a [routerLink]="['/edit', task.id]">Edit</a>
+          <button type="button" (click)="deleteTask(task.id)">Delete</button>
+        </div>
+      </footer>
+    </article>
+  </div>
+
+  <p class="state-msg" *ngIf="!loading && !errorMessage && visibleTasks.length === 0">
+    No tasks found for the current filter.
+  </p>
+</section>
