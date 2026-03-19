@@ -1,39 +1,69 @@
 package com.example.taskmanager.service;
-import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import com.example.taskmanager.dto.TaskRequest;
+import com.example.taskmanager.dto.TaskResponse;
+import com.example.taskmanager.exception.ResourceNotFoundException;
 import com.example.taskmanager.model.Task;
+import com.example.taskmanager.model.TaskStatus;
 import com.example.taskmanager.repository.TaskRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class TaskService {
 
-    @Autowired
-    private TaskRepository repository;
+    private final TaskRepository repository;
 
-    public List<Task> getAllTasks() {
-        return repository.findAll();
+    public TaskService(TaskRepository repository) {
+        this.repository = repository;
     }
 
-     public Task getTaskById(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Task not found"));
+    public List<TaskResponse> getAllTasks(TaskStatus status) {
+        List<Task> tasks = status == null
+                ? repository.findAllByOrderByCreatedAtDesc()
+                : repository.findByStatusOrderByCreatedAtDesc(status);
+
+        return tasks.stream().map(this::toResponse).toList();
     }
 
-    public Task createTask(Task task) {
-        return repository.save(task);
+    public TaskResponse getTaskById(Long id) {
+        return toResponse(findTaskById(id));
     }
 
-    public Task updateTask(Long id, Task updatedTask) {
-        Task task = getTaskById(id);
-        task.setTitle(updatedTask.getTitle());
-        task.setDescription(updatedTask.getDescription());
-        task.setStatus(updatedTask.getStatus());
-        return repository.save(task);
+    public TaskResponse createTask(TaskRequest request) {
+        Task task = new Task();
+        task.setTitle(request.title().trim());
+        task.setDescription(request.description());
+        task.setStatus(request.status());
+        return toResponse(repository.save(task));
+    }
+
+    public TaskResponse updateTask(Long id, TaskRequest request) {
+        Task task = findTaskById(id);
+        task.setTitle(request.title().trim());
+        task.setDescription(request.description());
+        task.setStatus(request.status());
+        return toResponse(repository.save(task));
     }
 
     public void deleteTask(Long id) {
-        repository.deleteById(id);
+        Task existingTask = findTaskById(id);
+        repository.delete(existingTask);
+    }
+
+    private Task findTaskById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Task with ID " + id + " was not found"));
+    }
+
+    private TaskResponse toResponse(Task task) {
+        return new TaskResponse(
+                task.getId(),
+                task.getTitle(),
+                task.getDescription(),
+                task.getStatus(),
+                task.getCreatedAt()
+        );
     }
 }
