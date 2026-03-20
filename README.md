@@ -36,6 +36,29 @@ It supports secure authentication, protected task operations, filtering, and Doc
 
 From the project root:
 
+1. Create a local environment file from the template.
+
+```bash
+cp .env.example .env
+```
+
+PowerShell:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+2. Update `.env` with your local values:
+
+- `MYSQL_ROOT_PASSWORD`
+- `MYSQL_USER`
+- `MYSQL_PASSWORD`
+- `SPRING_DATASOURCE_USERNAME`
+- `SPRING_DATASOURCE_PASSWORD`
+- `APP_JWT_SECRET`
+
+3. Start the stack:
+
 ```bash
 docker compose up --build
 ```
