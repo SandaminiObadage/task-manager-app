@@ -5,19 +5,19 @@
       <h1>{{ appName }}</h1>
     </div>
 
-    <nav class="main-nav" aria-label="Primary navigation" *ngIf="isAuthenticated">
-      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Tasks</a>
-      <a routerLink="/add" routerLinkActive="active">New Task</a>
+    <nav class="main-nav nav nav-pills" aria-label="Primary navigation" *ngIf="isAuthenticated">
+      <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Tasks</a>
+      <a class="nav-link" routerLink="/add" routerLinkActive="active">New Task</a>
     </nav>
 
-    <nav class="main-nav" aria-label="Authentication navigation" *ngIf="!isAuthenticated">
-      <a routerLink="/login" routerLinkActive="active">Login</a>
-      <a routerLink="/register" routerLinkActive="active">Register</a>
+    <nav class="main-nav nav nav-pills" aria-label="Authentication navigation" *ngIf="!isAuthenticated">
+      <a class="nav-link" routerLink="/login" routerLinkActive="active">Login</a>
+      <a class="nav-link" routerLink="/register" routerLinkActive="active">Register</a>
     </nav>
 
     <div class="user-chip" *ngIf="isAuthenticated">
-      <span>{{ currentUsername }}</span>
-      <button type="button" (click)="logout()">Logout</button>
+      <span class="badge text-bg-light border">{{ currentUsername }}</span>
+      <button class="btn btn-sm btn-outline-danger" type="button" (click)="logout()">Logout</button>
     </div>
   </header>
 

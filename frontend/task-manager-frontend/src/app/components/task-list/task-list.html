@@ -5,13 +5,13 @@
       <h2>Track your priorities</h2>
       <p class="subtitle">Create, edit, filter and complete tasks with a clean workflow.</p>
     </div>
-    <a class="create-btn" routerLink="/add">+ Add Task</a>
+    <a class="create-btn btn btn-primary" routerLink="/add">+ Add Task</a>
   </header>
 
   <div class="toolbar">
     <label>
       Status
-      <select [(ngModel)]="selectedStatus" (change)="onFilterChange()">
+      <select class="form-select" [(ngModel)]="selectedStatus" (change)="onFilterChange()">
         <option value="">All</option>
         <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
       </select>
@@ -20,6 +20,7 @@
     <label>
       Search
       <input
+        class="form-control"
         type="text"
         placeholder="Search title or description"
         [(ngModel)]="searchTerm"
@@ -29,7 +30,7 @@
 
   <p class="state-msg" *ngIf="loading">Loading tasks...</p>
   <p class="state-msg error" *ngIf="errorMessage">{{ errorMessage }}</p>
-  <button class="retry-btn" type="button" *ngIf="errorMessage && !loading" (click)="loadTasks()">
+  <button class="retry-btn btn btn-outline-secondary btn-sm" type="button" *ngIf="errorMessage && !loading" (click)="loadTasks()">
     Retry
   </button>
 
@@ -45,8 +46,8 @@
       <footer>
         <small>Created: {{ task.createdAt ? (task.createdAt | date: 'medium') : '-' }}</small>
         <div class="actions">
-          <a [routerLink]="['/edit', task.id]">Edit</a>
-          <button type="button" (click)="deleteTask(task.id)">Delete</button>
+          <a class="btn btn-sm btn-outline-primary" [routerLink]="['/edit', task.id]">Edit</a>
+          <button class="btn btn-sm btn-outline-danger" type="button" (click)="deleteTask(task.id)">Delete</button>
         </div>
       </footer>
     </article>

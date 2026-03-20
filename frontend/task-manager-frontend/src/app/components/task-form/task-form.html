@@ -8,7 +8,7 @@
   <p class="state-msg" *ngIf="loading">Loading task details...</p>
   <p class="state-msg error" *ngIf="errorMessage && !loading">{{ errorMessage }}</p>
   <button
-    class="retry-btn"
+    class="retry-btn btn btn-outline-secondary btn-sm"
     type="button"
     *ngIf="isEditMode && errorMessage && !loading"
     (click)="loadTaskDetails()"
@@ -20,6 +20,7 @@
     <label>
       Title
       <input
+        class="form-control"
         type="text"
         formControlName="title"
         placeholder="Ex: Complete full stack assignment"
@@ -31,6 +32,7 @@
     <label>
       Description
       <textarea
+        class="form-control"
         formControlName="description"
         rows="5"
         placeholder="Optional details"
@@ -41,15 +43,15 @@
 
     <label>
       Status
-      <select formControlName="status" [disabled]="loading">
+      <select class="form-select" formControlName="status" [disabled]="loading">
         <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
       </select>
       <small class="error" *ngIf="controlError('status')">{{ controlError('status') }}</small>
     </label>
 
     <div class="actions">
-      <a routerLink="/">Cancel</a>
-      <button type="submit" [disabled]="submitting || loading || (isEditMode && !taskLoaded)">
+      <a class="btn btn-outline-secondary" routerLink="/">Cancel</a>
+      <button class="btn btn-primary" type="submit" [disabled]="submitting || loading || (isEditMode && !taskLoaded)">
         {{ submitting ? 'Saving...' : (isEditMode ? 'Update Task' : 'Create Task') }}
       </button>
     </div>
