@@ -16,22 +16,32 @@
     Retry loading task
   </button>
 
-  <form [formGroup]="taskForm" (ngSubmit)="submit()" *ngIf="!loading" novalidate>
+  <form [formGroup]="taskForm" (ngSubmit)="submit()" novalidate>
     <label>
       Title
-      <input type="text" formControlName="title" placeholder="Ex: Complete full stack assignment" />
+      <input
+        type="text"
+        formControlName="title"
+        placeholder="Ex: Complete full stack assignment"
+        [readonly]="loading"
+      />
       <small class="error" *ngIf="controlError('title')">{{ controlError('title') }}</small>
     </label>
 
     <label>
       Description
-      <textarea formControlName="description" rows="5" placeholder="Optional details"></textarea>
+      <textarea
+        formControlName="description"
+        rows="5"
+        placeholder="Optional details"
+        [readonly]="loading"
+      ></textarea>
       <small class="error" *ngIf="controlError('description')">{{ controlError('description') }}</small>
     </label>
 
     <label>
       Status
-      <select formControlName="status">
+      <select formControlName="status" [disabled]="loading">
         <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
       </select>
       <small class="error" *ngIf="controlError('status')">{{ controlError('status') }}</small>
@@ -39,7 +49,7 @@
 
     <div class="actions">
       <a routerLink="/">Cancel</a>
-      <button type="submit" [disabled]="submitting">
+      <button type="submit" [disabled]="submitting || loading || (isEditMode && !taskLoaded)">
         {{ submitting ? 'Saving...' : (isEditMode ? 'Update Task' : 'Create Task') }}
       </button>
     </div>
