@@ -5,6 +5,7 @@ import { Router, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 
 import { AuthService } from '../../services/auth';
+import { NotificationService } from '../../services/notification';
 
 @Component({
   selector: 'app-login',
@@ -26,7 +27,8 @@ export class LoginComponent {
 
   constructor(
     private readonly authService: AuthService,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly notifications: NotificationService
   ) {}
 
   submit(): void {
@@ -45,9 +47,13 @@ export class LoginComponent {
       })
       .pipe(finalize(() => (this.submitting = false)))
       .subscribe({
-        next: () => this.router.navigateByUrl('/'),
+        next: () => {
+          this.notifications.success('Login successful. Welcome back.');
+          this.router.navigateByUrl('/');
+        },
         error: (error) => {
           this.errorMessage = error?.error?.message || 'Login failed. Please check your credentials.';
+          this.notifications.error(this.errorMessage);
         },
       });
   }
