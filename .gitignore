@@ -1,0 +1,15 @@
+.env
+.env.local
+.env.*
+!.env.example
+
+# IDE
+.idea/
+
+# Backend build output
+backend/taskmanager/target/
+
+# Frontend caches/build output
+frontend/task-manager-frontend/.angular/
+frontend/task-manager-frontend/dist/
+frontend/task-manager-frontend/node_modules/

@@ -1,102 +1,85 @@
-# Task Manager App (Angular + Spring Boot)
+# Task Manager App
 
-This project is a full-stack Task Manager built for your assignment requirements.
+A modern full-stack task management system built with Angular and Spring Boot.  
+It supports secure authentication, protected task operations, filtering, and Docker-based deployment.
 
-## Implemented Scope
+## Tech Stack
 
-### Backend (Spring Boot)
-- REST API for tasks with full CRUD
-- MySQL persistence with Spring Data JPA
-- Layered architecture: controller, service, repository
-- Validation with clear API errors
-- Global exception handling
-- JWT authentication (register/login + protected task endpoints)
-- Spring Security with stateless bearer-token authorization
-- CORS configured for Angular frontend via application properties
-- Optional filter by status via query parameter
+- Frontend: Angular
+- Backend: Spring Boot, Spring Security, Spring Data JPA
+- Database: MySQL
+- Auth: JWT (Bearer Token)
+- Deployment: Docker Compose + Nginx
 
-### Frontend (Angular)
-- Routed pages:
-  - Login page
-  - Register page
-  - Task list page
-  - Add task page
-  - Edit task page
-- Reactive form for create/update
-- Validation:
-  - Required title
-  - Max length checks
-- Login/register validation and error handling
-- API integration via HttpClient service
-- Auth interceptor to attach JWT bearer token
-- Route guard to protect task routes
-- Error handling and user feedback states
-- Status filter and text search
-- Enhanced responsive UI design
+## Key Features
 
-### Bonus Included
-- Docker setup for full stack using Docker Compose
-  - MySQL
-  - Spring Boot backend
-  - Angular frontend (served by Nginx)
+- User registration and login
+- JWT-protected APIs
+- Full CRUD for tasks
+- Task status filtering (`TO_DO`, `IN_PROGRESS`, `DONE`)
+- Input validation and global error handling
+- Route guard and auth interceptor on frontend
+- Responsive UI for daily use
 
-## Project Structure
+## Project Layout
 
-- backend/taskmanager: Spring Boot backend
-- frontend/task-manager-frontend: Angular frontend
-- docker-compose.yml: Full stack containers
+```text
+.
+|- backend/taskmanager              # Spring Boot API
+|- frontend/task-manager-frontend  # Angular app
+|- docker-compose.yml              # Full stack orchestration
+```
 
-## Backend Setup (Local)
+## Quick Start
+
+### Option 1: Run with Docker (Recommended)
+
+From the project root:
+
+```bash
+docker compose up --build
+```
+
+Services:
+
+- Frontend: http://localhost:4200
+- Backend: http://localhost:8080
+- MySQL: localhost:3308
+
+Stop everything:
+
+```bash
+docker compose down
+```
+
+Reset containers and DB volume:
+
+```bash
+docker compose down -v
+```
+
+### Option 2: Run Locally
 
 Prerequisites:
-- Java 17+
-- MySQL 8+
-- Maven (or use Maven Wrapper)
 
-1. Create database:
+- Java 17+
+- Node.js 20+ and npm
+- MySQL 8+
+
+Create database:
 
 ```sql
 CREATE DATABASE taskdb;
 ```
 
-2. Configure credentials in backend/taskmanager/src/main/resources/application.properties.
-
-Defaults are:
-- DB URL: jdbc:mysql://localhost:3306/taskdb
-- Username: hashini
-- Password: hashini123
-
-You can also override using environment variables:
-- SPRING_DATASOURCE_URL
-- SPRING_DATASOURCE_USERNAME
-- SPRING_DATASOURCE_PASSWORD
-- APP_JWT_SECRET
-- APP_JWT_EXPIRATION_MS
-- APP_CORS_ALLOWED_ORIGINS
-
-3. Run backend:
-
-```bash
-cd backend/taskmanager
-./mvnw spring-boot:run
-```
-
-On Windows PowerShell:
+Backend (PowerShell):
 
 ```powershell
 cd backend/taskmanager
 .\mvnw.cmd spring-boot:run
 ```
 
-Backend URL: http://localhost:8080
-
-## Frontend Setup (Local)
-
-Prerequisites:
-- Node.js 20+ (or newer LTS)
-- npm
-
-1. Run frontend:
+Frontend:
 
 ```bash
 cd frontend/task-manager-frontend
@@ -104,18 +87,38 @@ npm install
 npm start
 ```
 
-Frontend URL: http://localhost:4200
+## Configuration
 
-## API Endpoints
+Default database configuration:
+
+- URL: `jdbc:mysql://localhost:3306/taskdb`
+- Username: `taskapp_user` (example)
+- Password: `change_me` (example)
+
+Environment file usage:
+
+- Keep real local values in `.env` (do not commit)
+- Keep placeholders in `.env.example` (safe to commit)
+
+You can override values with environment variables:
+
+- `SPRING_DATASOURCE_URL`
+- `SPRING_DATASOURCE_USERNAME`
+- `SPRING_DATASOURCE_PASSWORD`
+- `APP_JWT_SECRET`
+- `APP_JWT_EXPIRATION_MS`
+- `APP_CORS_ALLOWED_ORIGINS`
+
+## API Overview
 
 ### Authentication
 
-Base path: /api/auth
+Base path: `/api/auth`
 
-- POST /api/auth/register
-- POST /api/auth/login
+- `POST /api/auth/register`
+- `POST /api/auth/login`
 
-Register/Login request payload:
+Sample request:
 
 ```json
 {
@@ -124,7 +127,7 @@ Register/Login request payload:
 }
 ```
 
-Auth response payload:
+Sample response:
 
 ```json
 {
@@ -135,24 +138,24 @@ Auth response payload:
 }
 ```
 
-Use header for protected endpoints:
+Auth header for protected routes:
 
 ```http
 Authorization: Bearer <jwt-token>
 ```
 
-### Task Management (Protected)
+### Tasks (Protected)
 
-Base path: /api/tasks
+Base path: `/api/tasks`
 
-- GET /api/tasks
-- GET /api/tasks?status=TO_DO|IN_PROGRESS|DONE
-- GET /api/tasks/{id}
-- POST /api/tasks
-- PUT /api/tasks/{id}
-- DELETE /api/tasks/{id}
+- `GET /api/tasks`
+- `GET /api/tasks?status=TO_DO|IN_PROGRESS|DONE`
+- `GET /api/tasks/{id}`
+- `POST /api/tasks`
+- `PUT /api/tasks/{id}`
+- `DELETE /api/tasks/{id}`
 
-### Task Payload (Create/Update)
+Task payload:
 
 ```json
 {
@@ -162,38 +165,7 @@ Base path: /api/tasks
 }
 ```
 
-## Docker Run
-
-From project root:
-
-```bash
-docker compose up --build
-```
-
-Services:
-- Frontend: http://localhost:4200
-- Backend: http://localhost:8080
-- MySQL: localhost:3308
-
-Docker DB credentials:
-- Database: taskdb
-- Username: hashini
-- Password: hashini123
-- Root password: hashini123
-
-Stop services:
-
-```bash
-docker compose down
-```
-
-To also remove DB volume:
-
-```bash
-docker compose down -v
-```
-
 ## Notes
 
-- Task APIs are secured and require a valid JWT token.
-- Register/login can be done directly from the Angular UI.
+- Task endpoints require a valid JWT token.
+- Register/login can be completed from the Angular UI.
