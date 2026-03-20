@@ -2,10 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { finalize, retry, timeout } from 'rxjs';
+import { finalize } from 'rxjs';
 
-import { TaskStatus } from '../../models/task';
+import { Task, TaskStatus } from '../../models/task';
 import { TaskService } from '../../services/task';
+
+type TaskDetailsResponse = Task | { task?: Task; data?: Task };
+type TaskDetailsCandidate = Task & { descrintion?: string | null };
 
 @Component({
   selector: 'app-task-form',
@@ -25,6 +28,7 @@ export class TaskFormComponent implements OnInit {
   });
 
   editTaskId?: number;
+  taskLoaded = true;
   loading = false;
   submitting = false;
   errorMessage = '';
@@ -36,19 +40,32 @@ export class TaskFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const idParam = this.route.snapshot.paramMap.get('id');
-    if (!idParam) {
-      return;
-    }
+    this.route.paramMap.subscribe((params) => {
+      const idParam = params.get('id');
 
-    const parsedId = Number(idParam);
-    if (!Number.isFinite(parsedId) || parsedId <= 0) {
-      this.errorMessage = 'Invalid task ID in the URL.';
-      return;
-    }
+      if (!idParam) {
+        this.editTaskId = undefined;
+        this.taskLoaded = true;
+        this.errorMessage = '';
+        this.taskForm.reset({
+          title: '',
+          description: '',
+          status: 'TO_DO',
+        });
+        return;
+      }
 
-    this.editTaskId = parsedId;
-    this.loadTaskDetails();
+      const parsedId = Number(idParam);
+      if (!Number.isFinite(parsedId) || parsedId <= 0) {
+        this.taskLoaded = false;
+        this.errorMessage = 'Invalid task ID in the URL.';
+        return;
+      }
+
+      this.editTaskId = parsedId;
+      this.taskLoaded = false;
+      this.loadTaskDetails();
+    });
   }
 
   loadTaskDetails(): void {
@@ -61,29 +78,73 @@ export class TaskFormComponent implements OnInit {
 
     this.taskService
       .getTaskById(this.editTaskId)
-      .pipe(
-        timeout(8000),
-        retry({ count: 2, delay: 1200 }),
-        finalize(() => (this.loading = false))
-      )
+      .pipe(finalize(() => (this.loading = false)))
       .subscribe({
-        next: (task) => {
+        next: (response: TaskDetailsResponse) => {
+          const task = this.extractTaskFromResponse(response);
+
+          if (!task) {
+            this.taskLoaded = false;
+            this.errorMessage = 'Task details response did not contain expected fields.';
+            return;
+          }
+
+          const normalizedStatus = this.statuses.includes(task.status)
+            ? task.status
+            : 'TO_DO';
+
           this.taskForm.patchValue({
-            title: task.title,
+            title: task.title || '',
             description: task.description || '',
-            status: task.status,
+            status: normalizedStatus,
           });
+
+          this.taskLoaded = true;
         },
         error: (error) => {
-          const isTimeout = error?.name === 'TimeoutError';
           const isNetworkError = error?.status === 0;
-          this.errorMessage = isTimeout
-            ? 'Loading task details timed out. Please try again in a few seconds.'
-            : isNetworkError
-              ? 'Cannot reach the backend API. Confirm Docker services are running on port 8080.'
-              : error?.error?.message || 'Failed to load task details.';
+          this.taskLoaded = false;
+          this.errorMessage = isNetworkError
+            ? 'Cannot reach the backend API. Confirm Docker services are running on port 8080.'
+            : error?.error?.message || 'Failed to load task details.';
         },
       });
+  }
+
+  private extractTaskFromResponse(response: TaskDetailsResponse): Task | null {
+    const candidate = this.isTask(response)
+      ? response
+      : this.isTask(response?.task)
+        ? response.task
+        : this.isTask(response?.data)
+          ? response.data
+          : null;
+
+    if (!candidate) {
+      return null;
+    }
+
+    const compatibleCandidate = candidate as TaskDetailsCandidate;
+
+    return {
+      ...candidate,
+      title: candidate.title ?? '',
+      description: compatibleCandidate.description ?? compatibleCandidate.descrintion ?? '',
+      status: candidate.status,
+    };
+  }
+
+  private isTask(value: unknown): value is Task {
+    if (!value || typeof value !== 'object') {
+      return false;
+    }
+
+    const candidate = value as Partial<Task>;
+    return (
+      typeof candidate.title === 'string' &&
+      typeof candidate.status === 'string' &&
+      ['TO_DO', 'IN_PROGRESS', 'DONE'].includes(candidate.status)
+    );
   }
 
   get isEditMode(): boolean {
@@ -91,6 +152,11 @@ export class TaskFormComponent implements OnInit {
   }
 
   submit(): void {
+    if (this.isEditMode && !this.taskLoaded) {
+      this.errorMessage = 'Task details are not loaded yet. Please retry loading task details.';
+      return;
+    }
+
     if (this.taskForm.invalid) {
       this.taskForm.markAllAsTouched();
       return;
