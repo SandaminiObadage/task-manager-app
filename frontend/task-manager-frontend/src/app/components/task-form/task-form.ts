@@ -5,6 +5,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 
 import { Task, TaskStatus } from '../../models/task';
+import { NotificationService } from '../../services/notification';
 import { TaskService } from '../../services/task';
 
 type TaskDetailsResponse = Task | { task?: Task; data?: Task };
@@ -36,7 +37,8 @@ export class TaskFormComponent implements OnInit {
   constructor(
     private readonly taskService: TaskService,
     private readonly route: ActivatedRoute,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly notifications: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -175,8 +177,13 @@ export class TaskFormComponent implements OnInit {
       ? this.taskService.updateTask(this.editTaskId as number, payload)
       : this.taskService.createTask(payload);
 
+    const successMessage = this.isEditMode
+      ? 'Task updated successfully.'
+      : 'Task created successfully.';
+
     request$.pipe(finalize(() => (this.submitting = false))).subscribe({
       next: () => {
+        this.notifications.success(successMessage);
         this.router.navigateByUrl('/');
       },
       error: (error) => {
@@ -188,6 +195,7 @@ export class TaskFormComponent implements OnInit {
           });
         }
         this.errorMessage = error?.error?.message || 'Failed to save task.';
+        this.notifications.error(this.errorMessage);
       },
     });
   }

@@ -3,10 +3,12 @@ import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/rou
 import { NgIf } from '@angular/common';
 
 import { AuthService } from './services/auth';
+import { ToastComponent } from './components/toast/toast';
+import { NotificationService } from './services/notification';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, NgIf],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, NgIf, ToastComponent],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
@@ -15,7 +17,8 @@ export class App {
 
   constructor(
     private readonly authService: AuthService,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly notifications: NotificationService
   ) {}
 
   get isAuthenticated(): boolean {
@@ -28,6 +31,7 @@ export class App {
 
   logout(): void {
     this.authService.logout();
+    this.notifications.info('Logged out successfully.');
     this.router.navigateByUrl('/login');
   }
 }

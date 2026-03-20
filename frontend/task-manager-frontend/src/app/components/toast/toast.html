@@ -1,0 +1,12 @@
+<aside class="toast-stack" aria-live="polite" aria-atomic="false">
+  <article
+    class="toast"
+    *ngFor="let toast of notifications.toasts$ | async; trackBy: trackByToastId"
+    [ngClass]="toast.type"
+  >
+    <p>{{ toast.text }}</p>
+    <button type="button" (click)="dismiss(toast.id)" aria-label="Dismiss notification">
+      x
+    </button>
+  </article>
+</aside>

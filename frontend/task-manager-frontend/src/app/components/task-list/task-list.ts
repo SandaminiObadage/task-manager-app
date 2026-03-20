@@ -5,6 +5,7 @@ import { RouterLink } from '@angular/router';
 import { finalize, retry, timeout } from 'rxjs';
 
 import { Task, TaskStatus } from '../../models/task';
+import { NotificationService } from '../../services/notification';
 import { TaskService } from '../../services/task';
 
 @Component({
@@ -23,7 +24,10 @@ export class TaskListComponent implements OnInit {
   loading = false;
   errorMessage = '';
 
-  constructor(private readonly taskService: TaskService) {}
+  constructor(
+    private readonly taskService: TaskService,
+    private readonly notifications: NotificationService
+  ) {}
 
   ngOnInit(): void {
     this.loadTasks();
@@ -71,9 +75,13 @@ export class TaskListComponent implements OnInit {
     }
 
     this.taskService.deleteTask(taskId).subscribe({
-      next: () => this.loadTasks(),
+      next: () => {
+        this.notifications.success('Task deleted successfully.');
+        this.loadTasks();
+      },
       error: (error) => {
         this.errorMessage = error?.error?.message || 'Failed to delete task.';
+        this.notifications.error(this.errorMessage);
       },
     });
   }
