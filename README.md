@@ -165,6 +165,29 @@ Task payload:
 }
 ```
 
+## Screenshots
+
+### Login
+![Login](screenshots/Login.png)
+
+### Register
+![Register](screenshots/Register.png)
+
+### Task List
+![Task List](screenshots/Task%20List.png)
+
+### Create Task
+![Create Task](screenshots/Create%20Task.png)
+
+### Update Task
+![Update Task](screenshots/Update%20Task.png)
+
+### Notification
+![Notification](screenshots/Notification.png)
+
+### Responsive View
+![Responsive View](screenshots/Responsive.png)
+
 ## Notes
 
 - Task endpoints require a valid JWT token.
